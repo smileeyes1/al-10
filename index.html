@@ -36,7 +36,7 @@ input[type=text]{
   font-size:24px;width:240px;text-align:center;
   border:4px solid #4caf50;border-radius:18px;padding:10px
 }
-.feedback{min-height:55px;font-size:24px;font-weight:bold}
+.feedback{min-height:65px;font-size:24px;font-weight:bold;white-space:pre-line}
 .timer{
   font-size:28px;font-weight:bold;
   background:#ffebee;color:#d32f2f;
@@ -54,7 +54,6 @@ input[type=text]{
 
 <div>
   <button class="btn-help" onclick="toggleRead()">🔊 اقرأ لي</button>
-  <button class="btn-help" onclick="startVoiceQuestion()">🎙️ اسألني</button>
   <button class="btn-help" onclick="stopAllVoice()">⛔ إيقاف الصوت</button>
 </div>
 
@@ -73,18 +72,19 @@ input[type=text]{
 <section id="section1" class="section">
 <h2 id="welcomeTitle"></h2>
 <p class="story-text">
-يا <strong id="name1"></strong>، أنت في رحلة تعلّم،
-والتفكير الهادئ أهم من السرعة 🌱
+يا <strong id="name1"></strong>،  
+التعلّم ليس سباقًا، بل رحلة هادئة 💚
 </p>
 <button class="btn-primary" onclick="nextSection(2)">أكمل</button>
 </section>
 
-<!-- قصة -->
+<!-- القصة -->
 <section id="section2" class="section">
 <h2>لقاء توتو الأرنب</h2>
 <p class="story-text">
-قال توتو: يا <strong id="name2"></strong>،
-فوفو الثعلب يحتاج مساعدتك في التفاح 🍎
+قال توتو:  
+يا <strong id="name2"></strong>، فوفو الثعلب يحاول العد،  
+ولكنه يحتاج عقلاً هادئًا مثلك.
 </p>
 <button class="btn-primary" onclick="nextSection(3)">هيا نبدأ</button>
 </section>
@@ -94,9 +94,9 @@ input[type=text]{
 <h2>لغز التفاح</h2>
 
 <p class="story-text" id="questionText">
-قال فوفو:
-لدي <span id="groupsNum"></span> مجموعات،
-وفي كل مجموعة <span id="eachNum"></span> تفاحات.
+قال فوفو:  
+لدي <span id="groupsNum"></span> مجموعات،  
+وفي كل مجموعة <span id="eachNum"></span> تفاحات.  
 كم تفاحة لدي؟
 </p>
 
@@ -124,15 +124,16 @@ input[type=text]{
 <button class="btn-primary" onclick="nextSection(5)">انتهيت</button>
 </section>
 
-<!-- اختبار -->
+<!-- الاختبار -->
 <section id="section5" class="section">
 <h2>الاختبار النهائي</h2>
 <div id="quizArea"></div>
 <button class="btn-primary" onclick="finishAdventure()">إنهاء</button>
 </section>
 
+<!-- التقرير -->
 <section id="section6" class="section">
-<h2>تهانينا 🎉</h2>
+<h2>تهانينا 🌟</h2>
 <div id="report"></div>
 <div id="stars" style="font-size:40px"></div>
 <button class="btn-primary" onclick="location.reload()">مغامرة جديدة</button>
@@ -141,29 +142,35 @@ input[type=text]{
 </div>
 
 <script>
-/* =====================
-   الأدوات الأساسية
-===================== */
+/* =========================
+   أدوات عامة
+========================= */
 const AR='٠١٢٣٤٥٦٧٨٩';
 const toA=n=>n.toString().replace(/\d/g,d=>AR[d]);
 const toW=s=>s.replace(/[٠-٩]/g,d=>AR.indexOf(d));
 
-/* =====================
+function cleanTextForSpeech(t){
+  return t.replace(/[\u{1F300}-\u{1FAFF}]/gu,"")
+          .replace(/[^\u0600-\u06FF\s.,؟!]/g,"")
+          .replace(/\s+/g," ").trim();
+}
+
+/* =========================
    بيانات الجلسة
-===================== */
+========================= */
 let studentName="", parentName="";
 let timeLeft=3600;
 let correctAnswers=0,totalQuestions=0;
 let currentA=2,currentB=3;
 
-/* =====================
-   محرك الذكاء التكيفي
-===================== */
-let adaptiveState = {
-  level: 1,
-  streakCorrect: 0,
-  streakWrong: 0,
-  lastAnswerTime: null,
+/* =========================
+   المحرك التكيفي الذكي
+========================= */
+let adaptiveState={
+  level:1,
+  streakCorrect:0,
+  streakWrong:0,
+  lastAnswerTime:null,
   maxA:3,
   maxB:3
 };
@@ -177,9 +184,34 @@ function adjustDifficulty(){
   }
 }
 
-/* =====================
+/* =========================
+   ذكاء تربوي نفسي (AI Layer)
+========================= */
+function analyzeLearningState(){
+  if(adaptiveState.streakWrong>=2)return"stress";
+  if(adaptiveState.streakCorrect>=3)return"confidence";
+  return"neutral";
+}
+
+function pedagogicalIntervention(state){
+  let msg="";
+  if(state==="stress"){
+    msg=`خذ نفسًا هادئًا يا ${studentName}.
+نحن نبحث عن الفهم، لا عن السرعة.`;
+  }
+  if(state==="confidence"){
+    msg=`جميل يا ${studentName}.
+واضح أنك تفكّر بعمق 🌱`;
+  }
+  if(msg){
+    gameFeedback.textContent+="\n"+msg;
+    speakText(msg);
+  }
+}
+
+/* =========================
    التنقل
-===================== */
+========================= */
 function nextSection(n){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById("section"+n).classList.add("active");
@@ -187,9 +219,9 @@ function nextSection(n){
   if(n===5)generateQuiz();
 }
 
-/* =====================
+/* =========================
    بدء الجلسة
-===================== */
+========================= */
 function saveNames(){
   if(!studentNameInput.value||!parentNameInput.value)return;
   studentName=studentNameInput.value;
@@ -209,9 +241,9 @@ function startTimer(){
   },1000);
 }
 
-/* =====================
-   توليد السؤال
-===================== */
+/* =========================
+   السؤال
+========================= */
 function generateQuestion(){
   adaptiveState.lastAnswerTime=Date.now();
   adjustDifficulty();
@@ -222,15 +254,14 @@ function generateQuestion(){
   groupsNum.textContent=toA(currentB);
   eachNum.textContent=toA(currentA);
 
-  visualArea.innerHTML=
-    ("🍎".repeat(currentA)+"<br>").repeat(currentB);
+  visualArea.innerHTML=("🍎".repeat(currentA)+"<br>").repeat(currentB);
 
   readQuestionOnly();
 }
 
-/* =====================
+/* =========================
    التحقق الذكي
-===================== */
+========================= */
 function checkAnswer(){
   const v=parseInt(toW(studentAnswer.value));
   if(isNaN(v))return;
@@ -239,27 +270,21 @@ function checkAnswer(){
   const timeTaken=(Date.now()-adaptiveState.lastAnswerTime)/1000;
 
   let feedback="";
-
   if(v===currentA*currentB){
     correctAnswers++;
     adaptiveState.streakCorrect++;
     adaptiveState.streakWrong=0;
-
     feedback=`أحسنت يا ${studentName}.
-    تفكيرك هادئ وجميل 🌷`;
-
-    if(adaptiveState.streakCorrect>=3 && timeTaken<6){
+تفكيرك هادئ ومميز 🌷`;
+    if(adaptiveState.streakCorrect>=3&&timeTaken<6){
       adaptiveState.level=Math.min(4,adaptiveState.level+1);
       adaptiveState.streakCorrect=0;
     }
-
   }else{
     adaptiveState.streakWrong++;
     adaptiveState.streakCorrect=0;
-
     feedback=`لا بأس يا ${studentName}.
-    كل محاولة تقوّيك خطوة 👣`;
-
+كل محاولة خطوة للأمام 👣`;
     if(adaptiveState.streakWrong>=2){
       adaptiveState.level=Math.max(1,adaptiveState.level-1);
       adaptiveState.streakWrong=0;
@@ -267,15 +292,18 @@ function checkAnswer(){
   }
 
   gameFeedback.textContent=feedback;
-  speakFeedbackOnly(feedback);
+  speakText(feedback);
+
+  pedagogicalIntervention(analyzeLearningState());
+
   setTimeout(()=>studentAnswer.value="",2500);
 }
 
 function nextQuestion(){generateQuestion();}
 
-/* =====================
+/* =========================
    الاختبار
-===================== */
+========================= */
 const quiz=[
 {q:"٢×٣",a:6},{q:"٤×٢",a:8},
 {q:"٣×٣",a:9},{q:"٥×٢",a:10},
@@ -296,35 +324,19 @@ function finishAdventure(){
   });
   const score=Math.round((correctAnswers/totalQuestions)*100);
   report.innerHTML=
-    `🌟 تقرير البطل ${studentName}<br>
-     وليّ الأمر ${parentName}<br>
-     النتيجة ${toA(score)}٪`;
+    `تقرير البطل ${studentName}<br>
+وليّ الأمر ${parentName}<br>
+النتيجة ${toA(score)}٪`;
   stars.textContent="⭐".repeat(Math.ceil(score/20));
   nextSection(6);
 }
 
-/* =====================
-   الصوت (مقيّد)
-===================== */
-function cleanTextForSpeech(t){
-  return t.replace(/[\u{1F300}-\u{1FAFF}]/gu,"")
-          .replace(/[^\u0600-\u06FF\s.,؟!]/g,"")
-          .replace(/\s+/g," ").trim();
-}
-
+/* =========================
+   الصوت (منضبط)
+========================= */
 function readQuestionOnly(){
   stopAllVoice();
-  const t=cleanTextForSpeech(questionText.innerText);
-  const u=new SpeechSynthesisUtterance(t);
-  u.lang="ar-SA";u.rate=0.9;
-  speechSynthesis.speak(u);
-}
-
-function speakFeedbackOnly(t){
-  stopAllVoice();
-  const u=new SpeechSynthesisUtterance(cleanTextForSpeech(t));
-  u.lang="ar-SA";u.rate=0.9;u.pitch=1.1;
-  speechSynthesis.speak(u);
+  speakText(questionText.innerText);
 }
 
 function toggleRead(){
@@ -333,13 +345,13 @@ function toggleRead(){
   document.querySelector(".section.active")
     .querySelectorAll("h2,.story-text")
     .forEach(e=>text+=" "+e.innerText);
-  const u=new SpeechSynthesisUtterance(cleanTextForSpeech(text));
-  u.lang="ar-SA";u.rate=0.9;
-  speechSynthesis.speak(u);
+  speakText(text);
 }
 
-function startVoiceQuestion(){
-  alert("ميزة السؤال الصوتي متاحة للشرح فقط");
+function speakText(t){
+  const u=new SpeechSynthesisUtterance(cleanTextForSpeech(t));
+  u.lang="ar-SA";u.rate=0.9;u.pitch=1.05;
+  speechSynthesis.speak(u);
 }
 
 function stopAllVoice(){
