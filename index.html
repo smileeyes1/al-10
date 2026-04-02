@@ -3,44 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>🌟 مغامرة البطل الحكيم 🌟</title>
+<title>مغامرة البطل الحكيم</title>
 
 <style>
 *{box-sizing:border-box}
 body{
+  margin:0;
   font-family:Arial,sans-serif;
   background:linear-gradient(135deg,#e0f7fa,#f3e5f5,#e8f5e9);
-  margin:0;padding:0;text-align:center;color:#2c3e50
+  color:#2c3e50;
+  text-align:center
 }
 .container{
-  max-width:980px;margin:20px auto;padding:25px;
-  background:#fff;border-radius:30px;
+  max-width:960px;
+  margin:20px auto;
+  background:#fff;
+  padding:25px;
+  border-radius:30px;
   box-shadow:0 15px 40px rgba(0,0,0,.15)
 }
-.section{
-  display:none;background:#f8f9fa;padding:30px;
-  border-radius:25px;margin:20px 0
-}
+.section{display:none}
 .section.active{display:block}
-h1{color:#1565c0;font-size:34px}
+h1{color:#1565c0}
 h2{color:#2e7d32}
-.story-text{font-size:24px;line-height:2}
+.story{font-size:24px;line-height:1.9}
 button{
-  padding:14px 32px;margin:10px;
-  font-size:20px;border:none;border-radius:20px;cursor:pointer
+  font-size:20px;
+  padding:14px 30px;
+  margin:10px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer
 }
-.btn-primary{background:#4caf50;color:white}
-.btn-help{background:#ff9800;color:white}
-input[type=text]{
-  font-size:24px;width:240px;text-align:center;
-  border:4px solid #4caf50;border-radius:18px;padding:10px
+.primary{background:#4caf50;color:#fff}
+.help{background:#ff9800;color:#fff}
+input{
+  font-size:24px;
+  padding:10px;
+  width:240px;
+  border-radius:15px;
+  border:3px solid #4caf50;
+  text-align:center
 }
-.feedback{min-height:65px;font-size:24px;font-weight:bold;white-space:pre-line}
+.feedback{
+  font-size:24px;
+  margin:15px;
+  min-height:50px;
+  white-space:pre-line
+}
 .timer{
-  font-size:28px;font-weight:bold;
-  background:#ffebee;color:#d32f2f;
-  padding:10px 22px;border-radius:20px;
+  background:#ffebee;
+  color:#d32f2f;
+  font-size:28px;
+  padding:10px 25px;
+  border-radius:25px;
   display:inline-block
 }
 </style>
@@ -53,66 +69,62 @@ input[type=text]{
 <div class="timer" id="timer">٦٠:٠٠</div>
 
 <div>
-  <button class="btn-help" onclick="toggleRead()">🔊 اقرأ لي</button>
-  <button class="btn-help" onclick="stopAllVoice()">⛔ إيقاف الصوت</button>
+  <button class="help" onclick="readActive()">🔊 اقرأ لي</button>
+  <button class="help" onclick="stopVoice()">⛔ إيقاف الصوت</button>
 </div>
 
-<!-- إدخال الأسماء -->
-<section id="section0" class="section active">
-<h2>أهلاً بك في غابة الحكمة</h2>
-<p class="story-text">قبل أن نبدأ، نود أن نتعرّف عليك.</p>
-
-<input id="studentNameInput" placeholder="اسم البطل"><br><br>
-<input id="parentNameInput" placeholder="اسم وليّ الأمر"><br><br>
-
-<button class="btn-primary" onclick="saveNames()">ابدأ المغامرة ✨</button>
+<!-- إدخال الاسم -->
+<section id="s0" class="section active">
+<h2>أهلاً بك</h2>
+<p class="story">قبل أن نبدأ، أخبرنا من أنت 🌱</p>
+<input id="student" placeholder="اسم البطل"><br><br>
+<input id="parent" placeholder="اسم ولي الأمر"><br><br>
+<button class="primary" onclick="start()">ابدأ المغامرة</button>
 </section>
 
-<!-- ترحيب -->
-<section id="section1" class="section">
-<h2 id="welcomeTitle"></h2>
-<p class="story-text">
-يا <strong id="name1"></strong>،  
-التعلّم ليس سباقًا، بل رحلة هادئة 💚
+<!-- تمهيد -->
+<section id="s1" class="section">
+<h2 id="welcome"></h2>
+<p class="story">
+التعلّم رحلة هادئة،  
+وكل محاولة خطوة للأمام.
 </p>
-<button class="btn-primary" onclick="nextSection(2)">أكمل</button>
+<button class="primary" onclick="go(2)">أكمل</button>
 </section>
 
 <!-- القصة -->
-<section id="section2" class="section">
+<section id="s2" class="section">
 <h2>لقاء توتو الأرنب</h2>
-<p class="story-text">
-قال توتو:  
-يا <strong id="name2"></strong>، فوفو الثعلب يحاول العد،  
-ولكنه يحتاج عقلاً هادئًا مثلك.
+<p class="story">
+يا <span id="n1"></span>،  
+نحتاج عقلك الهادئ لمساعدة فوفو الثعلب.
 </p>
-<button class="btn-primary" onclick="nextSection(3)">هيا نبدأ</button>
+<button class="primary" onclick="go(3)">هيا نبدأ</button>
 </section>
 
-<!-- السؤال -->
-<section id="section3" class="section">
+<!-- المهمة -->
+<section id="s3" class="section">
 <h2>لغز التفاح</h2>
 
-<p class="story-text" id="questionText">
-قال فوفو:  
-لدي <span id="groupsNum"></span> مجموعات،  
-وفي كل مجموعة <span id="eachNum"></span> تفاحات.  
-كم تفاحة لدي؟
+<p id="question" class="story">
+لدي <span id="g"></span> مجموعات،  
+وفي كل مجموعة <span id="e"></span> تفاحات.  
+كم العدد الكلي؟
 </p>
 
-<div id="visualArea" style="font-size:48px;line-height:1.6"></div>
+<div id="visual" style="font-size:48px"></div>
 
-<input id="studentAnswer" placeholder="اكتب جوابك"><br>
-<button class="btn-primary" onclick="checkAnswer()">تحقّق</button>
+<input id="ans" placeholder="اكتب جوابك"><br>
+<button class="primary" onclick="check()">تحقّق</button>
 
-<div id="gameFeedback" class="feedback"></div>
+<div id="feed" class="feedback"></div>
 
-<button class="btn-help" onclick="nextQuestion()">لغز آخر</button>
-<button class="btn-primary" onclick="nextSection(4)">إلى الدفتر</button>
+<button class="help" onclick="next()">لغز آخر</button>
+<button class="primary" onclick="go(4)">إلى الدفتر</button>
 </section>
 
 <!-- الدفتر -->
-<section id="section4" class="section">
+<section id="s4" class="section">
 <h2>دفتر بوبو</h2>
 <ul style="font-size:24px;text-align:right">
 <li>٢ × ٣</li>
@@ -121,241 +133,141 @@ input[type=text]{
 <li>٥ × ٢</li>
 <li>١ × ٧</li>
 </ul>
-<button class="btn-primary" onclick="nextSection(5)">انتهيت</button>
+<button class="primary" onclick="go(5)">انتهيت</button>
 </section>
 
-<!-- الاختبار -->
-<section id="section5" class="section">
-<h2>الاختبار النهائي</h2>
-<div id="quizArea"></div>
-<button class="btn-primary" onclick="finishAdventure()">إنهاء</button>
+<!-- اختبار -->
+<section id="s5" class="section">
+<h2>الاختبار</h2>
+<div id="quiz"></div>
+<button class="primary" onclick="finish()">إنهاء</button>
 </section>
 
-<!-- التقرير -->
-<section id="section6" class="section">
-<h2>تهانينا 🌟</h2>
+<!-- تقرير -->
+<section id="s6" class="section">
+<h2>أحسنت 🌟</h2>
 <div id="report"></div>
 <div id="stars" style="font-size:40px"></div>
-<button class="btn-primary" onclick="location.reload()">مغامرة جديدة</button>
+<button class="primary" onclick="location.reload()">مغامرة جديدة</button>
 </section>
 
 </div>
 
 <script>
-/* =========================
-   أدوات عامة
-========================= */
-const AR='٠١٢٣٤٥٦٧٨٩';
+/* ===== أدوات ===== */
+const AR="٠١٢٣٤٥٦٧٨٩";
 const toA=n=>n.toString().replace(/\d/g,d=>AR[d]);
 const toW=s=>s.replace(/[٠-٩]/g,d=>AR.indexOf(d));
+const speak=t=>{
+  const u=new SpeechSynthesisUtterance(
+    t.replace(/[\u{1F300}-\u{1FAFF}]/gu,"")
+     .replace(/[^\u0600-\u06FF\s.,؟!]/g,"")
+  );
+  u.lang="ar-SA";u.rate=0.9;
+  speechSynthesis.speak(u);
+};
+const stopVoice=()=>speechSynthesis.cancel();
 
-function cleanTextForSpeech(t){
-  return t.replace(/[\u{1F300}-\u{1FAFF}]/gu,"")
-          .replace(/[^\u0600-\u06FF\s.,؟!]/g,"")
-          .replace(/\s+/g," ").trim();
-}
+/* ===== بيانات ===== */
+let name="", parentName="", time=3600;
+let A=2,B=2, correct=0,total=0;
 
-/* =========================
-   بيانات الجلسة
-========================= */
-let studentName="", parentName="";
-let timeLeft=3600;
-let correctAnswers=0,totalQuestions=0;
-let currentA=2,currentB=3;
-
-/* =========================
-   المحرك التكيفي الذكي
-========================= */
-let adaptiveState={
+/* ===== ذكاء تكيفي ===== */
+let ai={
   level:1,
-  streakCorrect:0,
-  streakWrong:0,
-  lastAnswerTime:null,
-  maxA:3,
-  maxB:3
+  good:0,bad:0,
+  max:[3,5,7,9]
 };
 
-function adjustDifficulty(){
-  switch(adaptiveState.level){
-    case 1: adaptiveState.maxA=3; adaptiveState.maxB=3; break;
-    case 2: adaptiveState.maxA=5; adaptiveState.maxB=4; break;
-    case 3: adaptiveState.maxA=7; adaptiveState.maxB=6; break;
-    case 4: adaptiveState.maxA=9; adaptiveState.maxB=9; break;
-  }
+/* ===== التنقل ===== */
+const go=n=>{
+  document.querySelectorAll(".section")
+    .forEach(s=>s.classList.remove("active"));
+  document.getElementById("s"+n).classList.add("active");
+  if(n===3)gen();
+  if(n===5)genQuiz();
+};
+
+/* ===== بدء ===== */
+function start(){
+  if(!student.value||!parent.value)return;
+  name=student.value;parentName=parent.value;
+  welcome.textContent=`السلام عليك يا ${name}`;
+  n1.textContent=name;
+  timerTick();go(1);
 }
 
-/* =========================
-   ذكاء تربوي نفسي (AI Layer)
-========================= */
-function analyzeLearningState(){
-  if(adaptiveState.streakWrong>=2)return"stress";
-  if(adaptiveState.streakCorrect>=3)return"confidence";
-  return"neutral";
-}
-
-function pedagogicalIntervention(state){
-  let msg="";
-  if(state==="stress"){
-    msg=`خذ نفسًا هادئًا يا ${studentName}.
-نحن نبحث عن الفهم، لا عن السرعة.`;
-  }
-  if(state==="confidence"){
-    msg=`جميل يا ${studentName}.
-واضح أنك تفكّر بعمق 🌱`;
-  }
-  if(msg){
-    gameFeedback.textContent+="\n"+msg;
-    speakText(msg);
-  }
-}
-
-/* =========================
-   التنقل
-========================= */
-function nextSection(n){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById("section"+n).classList.add("active");
-  if(n===3)generateQuestion();
-  if(n===5)generateQuiz();
-}
-
-/* =========================
-   بدء الجلسة
-========================= */
-function saveNames(){
-  if(!studentNameInput.value||!parentNameInput.value)return;
-  studentName=studentNameInput.value;
-  parentName=parentNameInput.value;
-  welcomeTitle.textContent=`السلام عليك يا ${studentName}`;
-  name1.textContent=name2.textContent=studentName;
-  startTimer();
-  nextSection(1);
-}
-
-function startTimer(){
+/* ===== المؤقت ===== */
+function timerTick(){
   setInterval(()=>{
-    if(timeLeft<=0)return;
-    timeLeft--;
-    timer.textContent=
-      `${toA(Math.floor(timeLeft/60))}:${toA(timeLeft%60)}`;
+    if(time<=0)return;
+    time--;
+    timer.textContent=`${toA(Math.floor(time/60))}:${toA(time%60)}`;
   },1000);
 }
 
-/* =========================
-   السؤال
-========================= */
-function generateQuestion(){
-  adaptiveState.lastAnswerTime=Date.now();
-  adjustDifficulty();
-
-  currentA=Math.floor(Math.random()*adaptiveState.maxA)+1;
-  currentB=Math.floor(Math.random()*adaptiveState.maxB)+1;
-
-  groupsNum.textContent=toA(currentB);
-  eachNum.textContent=toA(currentA);
-
-  visualArea.innerHTML=("🍎".repeat(currentA)+"<br>").repeat(currentB);
-
-  readQuestionOnly();
+/* ===== سؤال ===== */
+function gen(){
+  A=Math.floor(Math.random()*ai.max[ai.level-1])+1;
+  B=Math.floor(Math.random()*ai.max[ai.level-1])+1;
+  g.textContent=toA(B);
+  e.textContent=toA(A);
+  visual.innerHTML=("🍎".repeat(A)+"<br>").repeat(B);
+  stopVoice();speak(question.innerText);
 }
 
-/* =========================
-   التحقق الذكي
-========================= */
-function checkAnswer(){
-  const v=parseInt(toW(studentAnswer.value));
+/* ===== تحقق ===== */
+function check(){
+  const v=parseInt(toW(ans.value));
   if(isNaN(v))return;
-
-  totalQuestions++;
-  const timeTaken=(Date.now()-adaptiveState.lastAnswerTime)/1000;
-
-  let feedback="";
-  if(v===currentA*currentB){
-    correctAnswers++;
-    adaptiveState.streakCorrect++;
-    adaptiveState.streakWrong=0;
-    feedback=`أحسنت يا ${studentName}.
-تفكيرك هادئ ومميز 🌷`;
-    if(adaptiveState.streakCorrect>=3&&timeTaken<6){
-      adaptiveState.level=Math.min(4,adaptiveState.level+1);
-      adaptiveState.streakCorrect=0;
-    }
+  total++;
+  let msg="";
+  if(v===A*B){
+    correct++;ai.good++;ai.bad=0;
+    msg=`أحسنت يا ${name}\nتفكيرك جميل 🌷`;
+    if(ai.good>=3&&ai.level<4){ai.level++;ai.good=0;}
   }else{
-    adaptiveState.streakWrong++;
-    adaptiveState.streakCorrect=0;
-    feedback=`لا بأس يا ${studentName}.
-كل محاولة خطوة للأمام 👣`;
-    if(adaptiveState.streakWrong>=2){
-      adaptiveState.level=Math.max(1,adaptiveState.level-1);
-      adaptiveState.streakWrong=0;
-    }
+    ai.bad++;ai.good=0;
+    msg=`لا بأس يا ${name}\nكل محاولة خطوة 👣`;
+    if(ai.bad>=2&&ai.level>1){ai.level--;ai.bad=0;}
   }
-
-  gameFeedback.textContent=feedback;
-  speakText(feedback);
-
-  pedagogicalIntervention(analyzeLearningState());
-
-  setTimeout(()=>studentAnswer.value="",2500);
+  feed.textContent=msg;
+  stopVoice();speak(msg);
+  setTimeout(()=>ans.value="",2500);
 }
 
-function nextQuestion(){generateQuestion();}
+/* ===== التالي ===== */
+const next=()=>gen();
 
-/* =========================
-   الاختبار
-========================= */
-const quiz=[
-{q:"٢×٣",a:6},{q:"٤×٢",a:8},
-{q:"٣×٣",a:9},{q:"٥×٢",a:10},
-{q:"١×٧",a:7}
-];
-
-function generateQuiz(){
-  quizArea.innerHTML=quiz.map(
-    (x,i)=>`${x.q} = <input id="q${i}"><br><br>`
+/* ===== اختبار ===== */
+const qs=[[2,3],[4,2],[3,3],[5,2],[1,7]];
+function genQuiz(){
+  quiz.innerHTML=qs.map((q,i)=>
+    `${toA(q[0])}×${toA(q[1])}= <input id="q${i}"><br><br>`
   ).join("");
 }
-
-function finishAdventure(){
-  quiz.forEach((x,i)=>{
-    const v=parseInt(toW(document.getElementById("q"+i).value));
-    totalQuestions++;
-    if(v===x.a)correctAnswers++;
+function finish(){
+  qs.forEach((q,i)=>{
+    if(parseInt(toW(document.getElementById("q"+i).value))===q[0]*q[1])
+      correct++;
+    total++;
   });
-  const score=Math.round((correctAnswers/totalQuestions)*100);
+  const score=Math.round((correct/total)*100);
   report.innerHTML=
-    `تقرير البطل ${studentName}<br>
-وليّ الأمر ${parentName}<br>
-النتيجة ${toA(score)}٪`;
+    `البطل: ${name}<br>ولي الأمر: ${parentName}<br>
+     النتيجة: ${toA(score)}٪`;
   stars.textContent="⭐".repeat(Math.ceil(score/20));
-  nextSection(6);
+  go(6);
 }
 
-/* =========================
-   الصوت (منضبط)
-========================= */
-function readQuestionOnly(){
-  stopAllVoice();
-  speakText(questionText.innerText);
-}
-
-function toggleRead(){
-  stopAllVoice();
-  let text="";
+/* ===== قراءة عامة بدون أزرار ===== */
+function readActive(){
+  stopVoice();
+  let t="";
   document.querySelector(".section.active")
-    .querySelectorAll("h2,.story-text")
-    .forEach(e=>text+=" "+e.innerText);
-  speakText(text);
-}
-
-function speakText(t){
-  const u=new SpeechSynthesisUtterance(cleanTextForSpeech(t));
-  u.lang="ar-SA";u.rate=0.9;u.pitch=1.05;
-  speechSynthesis.speak(u);
-}
-
-function stopAllVoice(){
-  speechSynthesis.cancel();
+    .querySelectorAll("h2,.story")
+    .forEach(e=>t+=" "+e.innerText);
+  speak(t);
 }
 </script>
 
